@@ -129,7 +129,7 @@ G.law.setRoadblock = function (px, pz, pvx, pvz) {
     barriers.push(col);
   }
   G.law.roadblock = { x: ahead.x, z: ahead.z, cars: cars, barriers: barriers, age: 0 };
-  G.law.roadblockCooldown = 26;
+  G.law.roadblockCooldown = 24;
 };
 G.law.clearRoadblock = function () {
   var rb = G.law.roadblock;
@@ -165,7 +165,7 @@ G.law.update = function (dt, hero) {
   // ---- heat decay while hidden ----
   if (L.heat > 0 && L.time - L.lastSeenAt > 5.5 && L.time - L.lastCrimeAt > 4) {
     var hide = G.districts.hideFactor(G.districtAt(px, pz));
-    L.heat = Math.max(0, L.heat - dt * 0.052 * hide);
+    L.heat = Math.max(0, L.heat - dt * 0.055 * hide);
     if (L.heat === 0) L.lastSeenAt = -99;
   }
   stars = L.stars();

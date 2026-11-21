@@ -39,13 +39,14 @@ G.crew.callIn = function () {
   var car = G.vehicles.create(G.scene, 'sport', 0x8a1a6e, node.x, node.z, 0);
   car.driver = 'crew';
   c.getaway = car;
-  c.callCooldown = 60;
+  c.callCooldown = 55;
   if (G.hud) G.hud.toast('DRE IS ROLLING', 'A magenta Comet is coming to you. Watch the minimap.');
   if (G.radio) G.radio.sfx('phone');
 };
 G.crew.update = function (dt) {
   var c = G.crew;
   var hero = G.hero;
+  if (!c.h || !hero.h) return; // init has not run yet: nothing to animate
   c.callCooldown = Math.max(0, c.callCooldown - dt);
   // the getaway car drives itself to the player, then gives up the wheel
   if (c.getaway) {

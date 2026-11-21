@@ -1,7 +1,7 @@
 // citizens.js — Solmar's people. One humanoid factory (used by the hero,
 // the crew and every pedestrian), sidewalk strollers who flee from danger,
 // and the armed hostiles the story sends at you.
-G.citizens = { all: [], maxLive: 24 };
+G.citizens = { all: [], maxLive: 26 };
 
 G.buildHumanoid = function (shirt, pants, skin, hair) {
   var g = new THREE.Group();
@@ -136,7 +136,7 @@ G.citizens.update = function (dt, px, pz) {
       }
       c.fireAcc -= dt;
       if (c.fireAcc <= 0 && dPlayer < 34) {
-        c.fireAcc = G.rand(0.9, 1.7);
+        c.fireAcc = G.rand(0.95, 1.7);
         if (G.weapons) G.weapons.npcShoot(c, px, pz);
       }
     } else if (c.state === 'flee') {

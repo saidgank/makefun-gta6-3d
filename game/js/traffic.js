@@ -1,7 +1,7 @@
 // traffic.js — Solmar's everyday drivers: they follow the road grid lane by
 // lane, brake for trouble, and bail out screaming when their car is jacked
 // or wrecked around them. Parked cars wait at the kerb to be borrowed.
-G.traffic = { cars: [], parked: {}, maxLive: 15 };
+G.traffic = { cars: [], parked: {}, maxLive: 16 };
 
 G.traffic.laneTarget = function (car) {
   var t = car.ai;
@@ -52,7 +52,7 @@ G.traffic.update = function (dt, px, pz) {
   for (var i = G.traffic.cars.length - 1; i >= 0; i--) {
     var car = G.traffic.cars[i];
     var d = G.dist2d(px, pz, car.x, car.z);
-    if (d > 260 || car.dead) {
+    if (d > 250 || car.dead) {
       if (car.dead && d < 60) { /* leave wrecks near the player as set dressing */ }
       else { G.traffic.bailSilent(car); G.vehicles.remove(car); G.traffic.cars.splice(i, 1); continue; }
     }

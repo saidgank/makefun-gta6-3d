@@ -3,7 +3,7 @@
 G.vehicles = { all: [], smokePool: [], smokeTex: null };
 
 var CAR_TYPES = {
-  sedan: { w: 1.8, l: 4.3, h: 0.62, cabinL: 2.1, cabinH: 0.52, accel: 13, top: 34, grip: 9.5, health: 100 },
+  sedan: { w: 1.8, l: 4.3, h: 0.62, cabinL: 2.1, cabinH: 0.52, accel: 13, top: 35, grip: 9.5, health: 100 },
   taxi: { w: 1.8, l: 4.3, h: 0.62, cabinL: 2.1, cabinH: 0.52, accel: 13, top: 34, grip: 9.5, health: 100 },
   sport: { w: 1.86, l: 4.5, h: 0.5, cabinL: 1.8, cabinH: 0.42, accel: 18, top: 46, grip: 11, health: 90 },
   van: { w: 2.0, l: 4.9, h: 1.15, cabinL: 3.4, cabinH: 0.75, accel: 10.5, top: 29, grip: 8.5, health: 150 },
@@ -157,7 +157,7 @@ G.vehicles.drive = function (car, input, dt) {
   var rx = fz, rz = -fx;
   var vf = car.vx * fx + car.vz * fz;
   var vl = car.vx * rx + car.vz * rz;
-  var grip = input.handbrake ? 2.0 : spec.grip;
+  var grip = input.handbrake ? 1.9 : spec.grip;
   vl *= Math.exp(-grip * dt);
   vf *= Math.exp(-(input.handbrake ? 0.55 : 0.28) * dt);
   if (!input.throttle && Math.abs(vf) < 0.12) vf = 0;

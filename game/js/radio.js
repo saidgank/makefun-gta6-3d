@@ -26,7 +26,7 @@ G.radio.unlock = function () {
     G.radio.master.gain.value = 0.5;
     G.radio.master.connect(ctx.destination);
     G.radio.musicGain = ctx.createGain();
-    G.radio.musicGain.gain.value = 0.34;
+    G.radio.musicGain.gain.value = 0.36;
     G.radio.musicGain.connect(G.radio.master);
     G.radio.sfxGain = ctx.createGain();
     G.radio.sfxGain.gain.value = 0.8;
@@ -128,7 +128,7 @@ G.radio.engineStop = function () {
 };
 G.radio.sirenUpdate = function (nearestCopDist, stars) {
   if (!G.radio.ctx) return;
-  var want = stars > 0 && nearestCopDist < 60;
+  var want = stars > 0 && nearestCopDist < 66;
   if (want && !G.radio.sirenNodes) {
     var ctx = G.radio.ctx;
     var o = ctx.createOscillator();

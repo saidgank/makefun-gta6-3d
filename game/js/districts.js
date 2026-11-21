@@ -34,7 +34,7 @@ G.districtRect = function (id) {
 G.districts.adjust = function (id, delta, reason) {
   var before = G.districts.standing[id];
   G.districts.standing[id] = G.clamp(before + delta, 0, 100);
-  if (Math.abs(delta) >= 4 && G.hud) {
+  if (Math.abs(delta) >= 3 && G.hud) {
     G.hud.toast((delta > 0 ? '▲ ' : '▼ ') + G.districtInfo(id).name + ' STANDING ' +
       Math.round(G.districts.standing[id]), reason || (delta > 0 ? 'The district respects the work.' : 'The district felt that one.'));
   }
@@ -43,7 +43,7 @@ G.districts.adjust = function (id, delta, reason) {
 // garage gives its home district a discount; hostile districts call it in.
 G.districts.hideFactor = function (id) {
   var s = G.districts.standing[id];
-  return s >= 65 ? 1.5 : (s <= 30 ? 0.65 : 1);
+  return s >= 65 ? 1.6 : (s <= 30 ? 0.65 : 1);
 };
 G.districts.garagePrice = function (base) {
   var s = G.districts.standing.BEACHFRONT;

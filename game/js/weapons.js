@@ -9,7 +9,7 @@ G.weapons = {
 };
 var WEAPON_DEFS = {
   fists: { name: 'FISTS', rate: 0.38, damage: 26, range: 2.4, spread: 0, auto: false },
-  pistol: { name: 'PISTOL', rate: 0.27, damage: 34, range: 95, spread: 0.006, auto: false },
+  pistol: { name: 'PISTOL', rate: 0.27, damage: 35, range: 95, spread: 0.006, auto: false },
   smg: { name: 'SMG "KESTREL"', rate: 0.095, damage: 15, range: 80, spread: 0.03, auto: true },
 };
 G.weapons.DEFS = WEAPON_DEFS;
@@ -192,7 +192,7 @@ G.weapons.update = function (dt) {
     p.age += dt;
     p.mesh.rotation.y += dt * 2.4;
     p.mesh.position.y = 0.8 + Math.sin(p.age * 3) * 0.16;
-    if (p.age > 45) { G.scene.remove(p.mesh); W.pickups.splice(j, 1); continue; }
+    if (p.age > 50) { G.scene.remove(p.mesh); W.pickups.splice(j, 1); continue; }
     if (G.hero && !G.hero.inCar && G.dist2d(G.hero.x, G.hero.z, p.x, p.z) < 1.7) {
       if (p.kind === 'health') { G.hero.heal(38); if (G.hud) G.hud.toast('+ HEALTH', 'Patched up. Keep moving.'); }
       if (p.kind === 'cash') { var n = G.randInt(25, 70); G.hero.cash += n; if (G.hud) G.hud.toast('+ ' + G.formatCash(n), 'Dropped cash, now yours.'); }

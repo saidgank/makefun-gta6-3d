@@ -3,12 +3,13 @@
 G.garage = { promptShown: false };
 
 G.garage.update = function (dt) {
+  if (!G.world.landmarks.garage || !G.world.landmarks.garage.zone) return;
   var zone = G.world.landmarks.garage.zone;
   var hero = G.hero;
   var inZone = hero.inCar && G.dist2d(hero.x, hero.z, zone.x, zone.z) < zone.r;
   if (!inZone) { G.garage.promptShown = false; return; }
   var car = hero.inCar;
-  var price = G.districts.garagePrice(120);
+  var price = G.districts.garagePrice(110);
   var hurt = car.health < car.maxHealth - 1;
   if (G.hud && !G.missions.active) {
     G.hud.prompt(hurt

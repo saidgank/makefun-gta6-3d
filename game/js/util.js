@@ -6,6 +6,8 @@ window.G = window.G || {};
 G.clamp = function (v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); };
 G.lerp = function (a, b, t) { return a + (b - a) * t; };
 G.dist2d = function (ax, az, bx, bz) { var dx = ax - bx, dz = az - bz; return Math.sqrt(dx * dx + dz * dz); };
+// shortest-arc angle blend: wraps the delta into [-PI, PI] first, so a
+// heading never spins the long way around when crossing the ±PI seam
 G.angleLerp = function (a, b, t) {
   var d = (b - a) % (Math.PI * 2);
   if (d > Math.PI) d -= Math.PI * 2;
@@ -87,4 +89,4 @@ G.segVsAabb = function (ax, az, bx, bz, b) {
   }
   return true;
 };
-G.formatCash = function (n) { return '$' + Math.round(n).toLocaleString('en-US'); };
+G.formatCash = function (n) { return '$' + Math.round(n || 0).toLocaleString('en-US'); };

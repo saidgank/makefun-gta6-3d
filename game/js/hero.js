@@ -54,6 +54,8 @@ G.hero.enterExit = function () {
     if (d < bd) { bd = d; best = c; }
   }
   if (!best) return;
+  // taking a traffic car makes its driver bail and flee on foot, and the
+  // theft is reported — a police car reports the heavier stealPolice crime
   if (best.driver === 'traffic' && G.traffic) G.traffic.bail(best);
   if (best.type === 'police') { if (G.law) G.law.reportCrime('stealPolice', best.x, best.z); }
   else if (G.law) G.law.reportCrime('carTheft', best.x, best.z);
@@ -127,7 +129,7 @@ G.hero.update = function (dt, input) {
   if (input.left) { mx -= rightX; mz -= rightZ; }
   var moving = (mx !== 0 || mz !== 0);
   var sprint = input.sprint && !input.aiming;
-  var speed = input.aiming ? 1.9 : (sprint ? 6.6 : 3.4);
+  var speed = input.aiming ? 1.9 : (sprint ? 6.6 : 3.5);
   if (moving) {
     var len = Math.sqrt(mx * mx + mz * mz);
     mx /= len; mz /= len;

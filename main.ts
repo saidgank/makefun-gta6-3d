@@ -14,6 +14,8 @@
 // tree produces a byte-identical dossier.
 //
 // Local check (Node 22):  mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
+// (the vendored builder throws if the tree breaks any cap above, so a
+// clean run doubles as the cap audit)
 // Local play:             node serve.ts  →  http://localhost:8080
 
 import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
@@ -23,6 +25,10 @@ import { buildDossier } from './vendor/makefun-game.ts';
 
 const entryDir = fileURLToPath(new URL('.', import.meta.url));
 const outputDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+
+if (!existsSync(join(entryDir, 'game'))) {
+  throw new Error('game/ is missing next to main.ts — run this from the entry root');
+}
 
 mkdirSync(outputDir, { recursive: true });
 cpSync(join(entryDir, 'game'), join(outputDir, 'game'), { recursive: true });

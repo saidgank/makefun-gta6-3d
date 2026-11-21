@@ -32,11 +32,11 @@ G.hud.toast = function (title, sub) {
   setText(G.hud.els['toast-title'], title || '');
   setText(G.hud.els['toast-sub'], sub || '');
   t.classList.remove('hidden');
-  G.hud.toastUntil = performance.now() + 3600;
+  G.hud.toastUntil = performance.now() + 3800;
 };
 G.hud.radioToast = function (text) {
   setText(G.hud.els['radio-toast'], text);
-  G.hud.radioUntil = performance.now() + 2600;
+  G.hud.radioUntil = performance.now() + 2800;
 };
 G.hud.districtFlash = function (id) {
   var info = G.districtInfo(id);

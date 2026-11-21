@@ -162,7 +162,7 @@ G.events.onBusted = function () {
   G.state = 'busted';
   G.hud.bigCenter('BUSTED');
   G.radio.sfx('busted');
-  var fine = Math.min(G.hero.cash, 100 + 120 * G.law.stars());
+  var fine = Math.min(G.hero.cash, 100 + 110 * G.law.stars());
   setTimeout(function () {
     G.hero.cash -= fine;
     G.hud.bigCenter(null);
@@ -232,7 +232,7 @@ G.frame = function (now) {
   } else if (G.state === 'title') {
     // slow orbital vista behind the title
     var a = t * 0.03;
-    G.camera.position.set(Math.sin(a) * 150, 42, 120 + Math.cos(a) * 60);
+    G.camera.position.set(Math.sin(a) * 145, 42, 120 + Math.cos(a) * 60);
     G.camera.lookAt(0, 6, 40);
     G.citizens.update(dt, -35, 146);
     G.traffic.update(dt, -35, 146);

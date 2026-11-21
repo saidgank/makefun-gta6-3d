@@ -21,6 +21,8 @@ G.save.write = function () {
 G.save.read = function () {
   try {
     var raw = localStorage.getItem(G.save.key);
+    // a corrupt or hand-edited save throws in JSON.parse and lands in the
+    // catch above as null, so Continue simply hides — never half-applied
     return raw ? JSON.parse(raw) : null;
   } catch (e) { return null; }
 };
@@ -34,7 +36,7 @@ G.save.apply = function (data) {
   if (data.ammo) G.weapons.ammo = data.ammo;
   G.weapons.unlocked.smg = !!data.smg;
   G.crew.callUnlocked = !!data.callUnlocked;
-  if (typeof data.x === 'number') G.hero.placeAt(data.x, data.z, Math.PI);
+  if (typeof data.x === 'number' && typeof data.z === 'number') G.hero.placeAt(data.x, data.z, Math.PI);
   return true;
 };
 G.save.clear = function () {

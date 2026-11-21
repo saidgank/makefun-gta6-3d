@@ -105,7 +105,7 @@ G.world.build = function (scene) {
     new THREE.MeshBasicMaterial({ map: skyTex, side: THREE.BackSide, fog: false })
   );
   scene.add(sky);
-  scene.fog = new THREE.Fog(0xdd8a5e, 150, 950);
+  scene.fog = new THREE.Fog(0xdd8a5e, 140, 950);
   var sun = new THREE.DirectionalLight(0xffb36b, 1.35);
   sun.position.set(-260, 210, 330);
   sun.castShadow = true;
@@ -116,7 +116,7 @@ G.world.build = function (scene) {
   sun.shadow.bias = -0.0006;
   scene.add(sun); scene.add(sun.target);
   G.world.sun = sun; G.world.sunTarget = sun.target;
-  scene.add(new THREE.HemisphereLight(0x93a7e8, 0x5a4630, 0.6));
+  scene.add(new THREE.HemisphereLight(0x93a7e8, 0x5a4630, 0.62));
   var fill = new THREE.DirectionalLight(0xff9a7a, 0.25);
   fill.position.set(200, 120, -260);
   scene.add(fill);

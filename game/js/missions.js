@@ -31,7 +31,7 @@ var JOBS = [
     intro: '"A package came off the night ferry and the wrong people are asking about it. Warehouse door, east docks. Get it to my club before anyone gets curious."',
     steps: [
       { type: 'pickup', x: 245, z: 30, r: 5, text: 'Pick up the package at the warehouse door' },
-      { type: 'timerGoto', x: CLUB.x, z: CLUB.z, r: 9, time: 150, text: 'Bring the package to the Solmar Social Club' },
+      { type: 'timerGoto', x: CLUB.x, z: CLUB.z, r: 9, time: 165, text: 'Bring the package to the Solmar Social Club' },
     ] },
   { title: 'THREE-STAR GOODBYE', district: 'DOWNTOWN', pay: 550,
     intro: '"Downtown drop, easy money." It was not easy money. The buyer was a cop, the bag was marked, and now the whole SPD wants a word. Lose them. All of them.',
@@ -169,7 +169,7 @@ G.missions.complete = function () {
   M.index++;
   M.active = null;
   M.clearTarget();
-  G.districts.adjust(job.district, 9, 'Job done in ' + G.districtInfo(job.district).name + '.');
+  G.districts.adjust(job.district, 10, 'Job done in ' + G.districtInfo(job.district).name + '.');
   if (G.radio) G.radio.sfx('jingle');
   var rank = M.rank();
   if (G.hud) G.hud.toast('JOB COMPLETE — ' + G.formatCash(job.pay), job.title + ' · Respect: ' + rank.name + (M.completed === 9 ? ' · THE CITY IS YOURS' : ''));
