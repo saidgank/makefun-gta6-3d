@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solmar Heat 3D — an open-world crime game</title>
+<style>
+  html, body { margin:0; padding:0; overflow:hidden; background:#1a1024; height:100%;
+    font-family:"Segoe UI", "Helvetica Neue", Arial, sans-serif; color:#fff;
+    -webkit-user-select:none; user-select:none; }
+  #game-canvas { position:fixed; inset:0; display:block; }
+  .hidden { display:none !important; }
+
+  /* ---------- HUD ---------- */
+  #hud { position:fixed; inset:0; pointer-events:none; z-index:5; }
+  #hud-top-left { position:absolute; top:14px; left:16px; text-shadow:0 2px 6px rgba(0,0,0,.75); }
+  #cash { font-size:30px; font-weight:800; letter-spacing:.5px; color:#7dff9a; }
+  #cash small { font-size:15px; color:#dfffe6; font-weight:600; }
+  #respect { font-size:14px; font-weight:700; color:#ffd76a; margin-top:2px; letter-spacing:1px; }
+  #hud-top-right { position:absolute; top:12px; right:16px; text-align:right; text-shadow:0 2px 6px rgba(0,0,0,.8); }
+  #stars { font-size:27px; letter-spacing:3px; color:#3a3f4a; line-height:1; }
+  #stars .lit { color:#ffcf3f; text-shadow:0 0 9px rgba(255,180,0,.9); }
+  #district-name { font-size:16px; font-weight:800; letter-spacing:2px; margin-top:5px; color:#ffe9c9; }
+  #standing-wrap { width:170px; height:8px; background:rgba(0,0,0,.55); border:1px solid rgba(255,255,255,.35);
+    border-radius:4px; margin:4px 0 0 auto; overflow:hidden; }
+  #standing-bar { height:100%; width:50%; background:linear-gradient(90deg,#ff9a5c,#ffd76a); }
+  #standing-label { font-size:11px; color:#ffd9ae; letter-spacing:1px; margin-top:2px; }
+  #hud-bottom-left { position:absolute; left:16px; bottom:16px; text-shadow:0 2px 5px rgba(0,0,0,.8); }
+  #health-wrap { width:210px; height:13px; background:rgba(0,0,0,.55); border:1px solid rgba(255,255,255,.4); border-radius:6px; overflow:hidden; }
+  #health-bar { height:100%; width:100%; background:linear-gradient(90deg,#e83e4e,#ff7a5c); }
+  #weapon { font-size:16px; font-weight:700; margin-top:6px; color:#fff; letter-spacing:1px; }
+  #weapon small { color:#ffd76a; }
+  #crew-status { font-size:12.5px; color:#9ad1ff; margin-top:3px; font-weight:600; }
+  #hud-bottom-right { position:absolute; right:16px; bottom:16px; text-align:center; }
+  #minimap { width:218px; height:218px; border-radius:50%; border:3px solid rgba(255,255,255,.55);
+    box-shadow:0 6px 24px rgba(0,0,0,.6); background:#20303c; display:block; }
+  #speedo { font-size:21px; font-weight:800; margin-top:5px; text-shadow:0 2px 6px rgba(0,0,0,.85); }
+  #speedo small { font-size:12px; color:#ffd9ae; }
+  #objective-wrap { position:absolute; left:50%; bottom:26px; transform:translateX(-50%); width:560px; max-width:62vw;
+    text-align:center; text-shadow:0 2px 7px rgba(0,0,0,.9); }
+  #objective-tag { font-size:12px; letter-spacing:3px; color:#ffd76a; font-weight:800; }
+  #objective { font-size:19px; font-weight:700; margin-top:2px; }
+  #objective-sub { font-size:13.5px; color:#ffe9c9; margin-top:1px; }
+  #prompt { position:absolute; left:50%; top:58%; transform:translateX(-50%); font-size:17px; font-weight:700;
+    background:rgba(10,10,18,.72); border:1px solid rgba(255,215,106,.65); border-radius:8px; padding:7px 16px; }
+  #prompt b { color:#ffd76a; }
+  #crosshair { position:absolute; left:50%; top:50%; width:22px; height:22px; transform:translate(-50%,-50%); opacity:.92; }
+  #crosshair:before, #crosshair:after { content:""; position:absolute; background:#fff; box-shadow:0 0 4px #000; }
+  #crosshair:before { left:10px; top:0; width:2px; height:22px; }
+  #crosshair:after { left:0; top:10px; width:22px; height:2px; }
+  #big-center { position:absolute; left:50%; top:34%; transform:translateX(-50%); font-size:64px; font-weight:900;
+    letter-spacing:2px; color:#ffd76a; text-shadow:0 4px 22px rgba(0,0,0,.85); text-align:center; white-space:nowrap; }
+  #toast { position:absolute; left:50%; top:15%; transform:translateX(-50%); background:rgba(12,10,20,.86);
+    border:1px solid rgba(255,215,106,.7); border-radius:10px; padding:12px 26px; text-align:center; max-width:70vw; }
+  #toast-title { font-size:24px; font-weight:900; letter-spacing:1px; color:#ffd76a; }
+  #toast-sub { font-size:15px; margin-top:3px; color:#fff; }
+  #radio-toast { position:absolute; right:18px; top:252px; font-size:14px; font-weight:700; color:#9ad1ff;
+    text-shadow:0 2px 6px rgba(0,0,0,.85); letter-spacing:1px; }
+  #damage-vignette { position:fixed; inset:0; pointer-events:none; z-index:6; opacity:0;
+    background:radial-gradient(ellipse at center, transparent 52%, rgba(200,10,20,.55) 100%); }
+
+  /* ---------- Menus ---------- */
+  .screen { position:fixed; inset:0; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:linear-gradient(180deg, rgba(16,8,26,.25) 0%, rgba(16,8,26,.78) 78%); text-align:center; }
+  .game-title { font-size:74px; font-weight:900; letter-spacing:3px; line-height:.95;
+    background:linear-gradient(180deg,#ffe9a8,#ff9a5c 55%,#ff5c7a); -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 5px 18px rgba(0,0,0,.65)); }
+  .game-subtitle { font-size:17px; letter-spacing:4px; color:#ffe9c9; margin-top:8px; font-weight:600; }
+  .menu-box { margin-top:30px; background:rgba(10,8,18,.78); border:1px solid rgba(255,215,106,.5); border-radius:12px; padding:20px 34px; }
+  .menu-btn { display:block; width:300px; margin:9px auto; padding:12px 0; font-size:19px; font-weight:800; letter-spacing:1px;
+    color:#1c1426; background:linear-gradient(180deg,#ffd76a,#ff9a5c); border:none; border-radius:8px; cursor:pointer; pointer-events:auto; }
+  .menu-btn:hover { filter:brightness(1.12); }
+  .menu-btn.secondary { background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.4); }
+  .controls { margin-top:16px; font-size:13.5px; line-height:1.75; color:#e8ddcb; text-align:left; }
+  .controls b { color:#ffd76a; display:inline-block; min-width:86px; }
+  .story-card { max-width:620px; font-size:16.5px; line-height:1.55; color:#fff; }
+  .story-card h2 { color:#ffd76a; letter-spacing:1px; margin:0 0 8px; font-size:27px; }
+</style>
+</head>
+<body>
+<canvas id="game-canvas"></canvas>
+
+<div id="hud" class="hidden">
+  <div id="hud-top-left">
+    <div id="cash">$0</div>
+    <div id="respect">ROOKIE</div>
+  </div>
+  <div id="hud-top-right">
+    <div id="stars"></div>
+    <div id="district-name">BEACHFRONT</div>
+    <div id="standing-wrap"><div id="standing-bar"></div></div>
+    <div id="standing-label">DISTRICT STANDING 50</div>
+  </div>
+  <div id="hud-bottom-left">
+    <div id="health-wrap"><div id="health-bar"></div></div>
+    <div id="weapon">FISTS</div>
+    <div id="crew-status"></div>
+  </div>
+  <div id="hud-bottom-right">
+    <canvas id="minimap" width="218" height="218"></canvas>
+    <div id="speedo"></div>
+  </div>
+  <div id="objective-wrap">
+    <div id="objective-tag"></div>
+    <div id="objective"></div>
+    <div id="objective-sub"></div>
+  </div>
+  <div id="prompt" class="hidden"></div>
+  <div id="crosshair" class="hidden"></div>
+  <div id="big-center" class="hidden"></div>
+  <div id="toast" class="hidden"><div id="toast-title"></div><div id="toast-sub"></div></div>
+  <div id="radio-toast"></div>
+</div>
+<div id="damage-vignette"></div>
+
+<div id="title-screen" class="screen">
+  <div class="game-title">SOLMAR HEAT</div>
+  <div class="game-subtitle">A 3D OPEN-WORLD CRIME STORY IN THE CITY OF SOLMAR</div>
+  <div class="menu-box">
+    <button class="menu-btn" id="btn-continue">CONTINUE</button>
+    <button class="menu-btn" id="btn-newgame">NEW GAME</button>
+    <div class="controls">
+      <div><b>W A S D</b> move / drive &nbsp; <b>MOUSE</b> camera &amp; aim (click the game first)</div>
+      <div><b>E</b> enter / exit car &nbsp; <b>SHIFT</b> sprint &nbsp; <b>SPACE</b> handbrake</div>
+      <div><b>CLICK</b> attack / shoot &nbsp; <b>1 2 3</b> fists · pistol · SMG</div>
+      <div><b>G</b> call Dre for a getaway car &nbsp; <b>F</b> interact / garage</div>
+      <div><b>R</b> radio station &nbsp; <b>M</b> mute &nbsp; <b>P</b> pause</div>
+    </div>
+  </div>
+</div>
+
+<div id="pause-screen" class="screen hidden">
+  <div class="game-title" style="font-size:44px">PAUSED</div>
+  <div class="menu-box">
+    <button class="menu-btn" id="btn-resume">RESUME</button>
+    <button class="menu-btn secondary" id="btn-quit-title">QUIT TO TITLE</button>
+    <div class="controls" id="pause-stats"></div>
+  </div>
+</div>
+
+<div id="story-screen" class="screen hidden">
+  <div class="story-card menu-box">
+    <h2 id="story-title"></h2>
+    <div id="story-text"></div>
+    <button class="menu-btn" id="btn-story-ok" style="margin-top:16px">LET'S RIDE</button>
+  </div>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="js/util.js"></script>
+<script src="js/world.js"></script>
+<script src="js/districts.js"></script>
+<script src="js/vehicles.js"></script>
+<script src="js/traffic.js"></script>
+<script src="js/citizens.js"></script>
+<script src="js/hero.js"></script>
+<script src="js/law.js"></script>
+<script src="js/weapons.js"></script>
+<script src="js/crew.js"></script>
+<script src="js/missions.js"></script>
+<script src="js/garage.js"></script>
+<script src="js/radio.js"></script>
+<script src="js/hud.js"></script>
+<script src="js/save.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
